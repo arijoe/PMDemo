@@ -1,36 +1,68 @@
-// Import styles (automatically injected into <head>).
-import '../styles/main.css';
+import {schema} from 'prosemirror-schema-basic';
+import {EditorState} from 'prosemirror-state';
+import {EditorView} from 'prosemirror-view';
+import {Schema, DOMParser} from 'prosemirror-model';
+import {undo, redo, history} from 'prosemirror-history';
+import {addListNodes} from 'prosemirror-schema-list';
+import {exampleSetup} from 'prosemirror-example-setup';
+import {keymap} from 'prosemirror-keymap';
+import {baseKeymap} from 'prosemirror-commands';
 
-// Import a couple modules for testing.
-import { sayHelloTo } from './modules/mod1';
-import addArray from './modules/mod2';
+// doc level properties
+const plugins = [
+  history(),
+  keymap({'Mod-z': undo, 'Mod-y': redo}),
+  keymap(baseKeymap)
+];
+const editor = document.querySelector('#editor');
 
-// Import a logger for easier debugging.
-import debug from 'debug';
-const log = debug('app:log');
+//documents
+const docs = [
+  // predefined from HTML
+  DOMParser.fromSchema(schema).parse(document.getElementById('test')),
+  // create on-the-fly
+  schema.node('doc', null, [
+    schema.node('paragraph', null, [schema.text('One.')]),
+    schema.node('horizontal_rule'),
+    schema.node('paragraph', null, [schema.text('Two!')])
+  ])
+];
 
-// The logger should only be enabled if we’re not in production.
-if (ENV !== 'production') {
+//states
+const states = [
+  // from document
+  EditorState.create({
+    doc: docs[0],
+    plugins: plugins
+  }),
+  // blank
+  EditorState.create({
+    schema,
+    plugins: plugins
+  })
+];
 
-  // Enable the logger.
-  debug.enable('*');
-  log('Logging is enabled!');
+//views... comment out to toggle
 
-  // Enable LiveReload
-  document.write(
-    '<script src="http://' + (location.host || 'localhost').split(':')[0] +
-    ':35729/livereload.js?snipver=1"></' + 'script>'
-  );
-} else {
-  debug.disable();
-}
+// 1. user-defined
+// const myView = new EditorView(editor, {
+//   state: states[0],
+//   dispatchTransaction(tr) {
+//     // eslint-disable-next-line no-console
+//     console.log(tr.doc.resolve(tr.doc.content.size - 1));
+//     myView.updateState(myView.state.apply(tr));
+//   } 
+// });
+// window.view = myView;
 
-// Run some functions from our imported modules.
-const result1 = sayHelloTo('Jason');
-const result2 = addArray([1, 2, 3, 4]);
-
-// Print the results on the page.
-const printTarget = document.getElementsByClassName('debug__output')[0];
-
-printTarget.innerText = `sayHelloTo('Jason') => ${result1}\n\n`;
-printTarget.innerText += `addArray([1, 2, 3, 4]) => ${result2}`;
+// 2. example https://prosemirror.net/examples/basic/
+const exampleSchema = new Schema({
+  nodes: addListNodes(schema.spec.nodes, 'paragraph block*', 'block'),
+  marks: schema.spec.marks
+});
+window.view = new EditorView(editor, {
+  state: EditorState.create({
+    doc: DOMParser.fromSchema(exampleSchema).parse(editor),
+    plugins: exampleSetup({schema: exampleSchema})
+  })
+});
