@@ -9,10 +9,10 @@ Base repo from here: [Learn Rollup.js](https://github.com/jlengstorf/learn-rollu
 ## To Use
 
 ### Install dependencies
-npm install
+`npm install`
 
 ### Start the watcher
-npm run watch
+`npm run watch`
 
 ### View the editor
 Go to `../PMDemo/build/index.html` in browser
