@@ -1,18 +1,22 @@
-# Learn Rollup.js
+# ProseMirror learning
 
-Base repo from here: [Rollup Quickstart](https://github.com/jlengstorf/learn-rollup).
+For messing with ProseMirror basics, creating a quick toy text editor.
+
+## Rollup.js
+
+Base repo from here: [Learn Rollup.js](https://github.com/jlengstorf/learn-rollup).
 
 ## To Use
 
-# Install dependencies
+### Install dependencies
 npm install
 
-# Start the watcher
+### Start the watcher
 npm run watch
 
-# Go to `../PMDemo/build/index.html` in browser
+### Go to `../PMDemo/build/index.html` in browser
 
-# Edit `../src/main.js` to mess with ProseMirror configurations
+### Edit `../src/main.js` to mess with ProseMirror configurations
 ```
 
 
