@@ -14,9 +14,10 @@ npm install
 ### Start the watcher
 npm run watch
 
-### Go to `../PMDemo/build/index.html` in browser
+### View the editor
+Go to `../PMDemo/build/index.html` in browser
 
-### Edit `../src/main.js` to mess with ProseMirror configurations
-```
+### Play around
+Edit `../src/main.js` to mess with ProseMirror configurations
 
 
