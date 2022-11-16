@@ -42,27 +42,32 @@ const states = [
   })
 ];
 
-//views... comment out to toggle
+//views... set constant here to determine which view to use
+const viewNumber = 0;
+let views = [];
 
-// 1. user-defined
-// const myView = new EditorView(editor, {
-//   state: states[0],
-//   dispatchTransaction(tr) {
-//     // eslint-disable-next-line no-console
-//     console.log(tr.doc.resolve(tr.doc.content.size - 1));
-//     myView.updateState(myView.state.apply(tr));
-//   } 
-// });
-// window.view = myView;
+// 0. user-defined
+const myView = new EditorView(editor, {
+  state: states[0],
+  dispatchTransaction(tr) {
+    // eslint-disable-next-line no-console
+    console.log(tr.doc.resolve(tr.doc.content.size - 1));
+    myView.updateState(myView.state.apply(tr));
+  } 
+});
+views.push(myView);
 
-// 2. example https://prosemirror.net/examples/basic/
+// 1. example https://prosemirror.net/examples/basic/
 const exampleSchema = new Schema({
   nodes: addListNodes(schema.spec.nodes, 'paragraph block*', 'block'),
   marks: schema.spec.marks
 });
-window.view = new EditorView(editor, {
+const exampleView = new EditorView(editor, {
   state: EditorState.create({
     doc: DOMParser.fromSchema(exampleSchema).parse(editor),
     plugins: exampleSetup({schema: exampleSchema})
   })
 });
+views.push(exampleView);
+
+window.view = views[viewNumber];
